@@ -93,11 +93,11 @@ module ApplicationHelper
   def announcement_preview(content, length: 80)
     text = strip_tags(md(content))
     preview = text.truncate(length)
-    link_text = text.strip
-    uri_regex = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+    stripped_text = text.strip
+    uri_regex = /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https]).source}\z/
 
-    if link_text.match?(uri_regex) && !link_text.match?(/\s/)
-      link_to preview, link_text
+    if stripped_text.match?(uri_regex)
+      link_to preview, stripped_text
     else
       preview
     end
