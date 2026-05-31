@@ -96,10 +96,13 @@ module ApplicationHelper
     stripped_text = text.strip
     uri_regex = /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https]).source}\z/
 
-    if stripped_text.match?(uri_regex)
-      link_to preview, stripped_text
-    else
-      preview
-    end
+    return preview if stripped_text.blank? || !stripped_text.match?(uri_regex)
+
+    uri = URI.parse(stripped_text)
+    return preview unless uri.is_a?(URI::HTTP) && uri.host.present?
+
+    link_to preview, stripped_text
+  rescue URI::InvalidURIError
+    preview
   end
 end
