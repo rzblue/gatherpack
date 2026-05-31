@@ -91,17 +91,16 @@ module ApplicationHelper
   end
 
   def announcement_preview(content, length: 80)
-    text = strip_tags(md(content))
-    preview = text.truncate(length)
-    stripped_text = text.strip
-    uri_regex = /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https]).source}\z/
+    raw_text = strip_tags(md(content))
+    preview = raw_text.truncate(length)
+    link_text = raw_text.strip
 
-    return preview if stripped_text.blank? || !stripped_text.match?(uri_regex)
+    return preview if link_text.blank?
 
-    uri = URI.parse(stripped_text)
+    uri = URI.parse(link_text)
     return preview unless uri.is_a?(URI::HTTP) && uri.host.present?
 
-    link_to preview, stripped_text
+    link_to preview, uri.to_s
   rescue URI::InvalidURIError
     preview
   end
