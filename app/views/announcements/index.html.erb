@@ -50,7 +50,7 @@
             <%= link_to announcement.title, announcement, "data-turbo": "false" %>
           </div>
           <div class="card-body">
-            <%= strip_tags(md(announcement.content)).truncate(80) %>
+            <%= announcement_preview(announcement.content) %>
           </div>
         </div>
       </div>

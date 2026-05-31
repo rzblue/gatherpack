@@ -89,4 +89,17 @@ module ApplicationHelper
     md = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true, lax_spacing: true)
     md.render(content || "").html_safe
   end
+
+  def announcement_preview(content, length: 80)
+    text = strip_tags(md(content))
+    preview = text.truncate(length)
+    link_text = text.strip
+    uri_regex = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+
+    if link_text.match?(uri_regex) && !link_text.match?(/\s/)
+      link_to preview, link_text
+    else
+      preview
+    end
+  end
 end
