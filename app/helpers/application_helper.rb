@@ -100,7 +100,8 @@ module ApplicationHelper
     uri = URI.parse(link_text)
     return preview unless uri.is_a?(URI::HTTP) && uri.host.present?
 
-    link_to preview, uri.to_s
+    link_target = uri.to_s
+    link_to link_target.truncate(length), link_target
   rescue URI::InvalidURIError
     preview
   end
